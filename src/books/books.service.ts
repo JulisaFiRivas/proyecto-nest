@@ -2,13 +2,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './entities/book.entity';
+import { BOOK_SEED } from '../seed/data/book.seed';
 
 @Injectable()
 export class BooksService {
-  private books: Book[] = [
-    { id: 1, title: '1984', author: 'George Orwell', genre: 'Distopía', description: 'Un clásico de la literatura.' },
-    { id: 2, title: 'El Señor de los Anillos', author: 'J.R.R. Tolkien', genre: 'Fantasía', description: 'La gran aventura de la Tierra Media.' },
-  ];
+  private books: Book[] = [...BOOK_SEED]; // Usar los datos del seed
 
   findAll(): Book[] {
     return this.books;

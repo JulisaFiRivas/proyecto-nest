@@ -1,0 +1,110 @@
+import {v4 as uuid} from 'uuid';
+import { Book } from 'src/books/entities/book.entity';
+
+export const BOOK_SEED: Book[] =[
+    {
+        id: 1,
+        title: 'Cien Años de Soledad',
+        author: 'Gabriel García Márquez',
+        genre: 'Realismo Mágico',
+        description: 'Una novela emblemática de la literatura latinoamericana.',
+    },
+    {
+        id: 2,
+        title: 'Don Quijote de la Mancha',
+        author: 'Miguel de Cervantes',
+        genre: 'Novela',
+        description: 'Una de las obras más importantes de la literatura española.',
+    },
+    {
+        id: 3,
+        title: '1984',
+        author: 'George Orwell',
+        genre: 'Distopía',
+        description: 'Una novela que explora los peligros del totalitarismo y la vigilancia masiva.',
+    },
+    {
+        id: 4,
+        title: 'Orgullo y Prejuicio',
+        author: 'Jane Austen',
+        genre: 'Romance',
+        description: 'Una crítica social brillante envuelta en una historia de amor.',
+    },
+    {
+        id: 5,
+        title: 'El Señor de los Anillos',
+        author: 'J.R.R. Tolkien',
+        genre: 'Fantasía',
+        description: 'La épica aventura que definió el género de la fantasía moderna.',
+    },
+    {
+        id: 6,
+        title: 'Crónica de una Muerte Anunciada',
+        author: 'Gabriel García Márquez',
+        genre: 'Realismo Mágico',
+        description: 'Un relato magistral sobre el honor, la fatalidad y la violencia.',
+    },
+    {
+        id: 7,
+        title: 'El Principito',
+        author: 'Antoine de Saint-Exupéry',
+        genre: 'Fábula',
+        description: 'Una reflexión poética sobre la vida, la amistad y la condición humana.',
+    },
+    {
+        id: 8,
+        title: 'Rayuela',
+        author: 'Julio Cortázar',
+        genre: 'Novela Experimental',
+        description: 'Una obra revolucionaria que desafía las convenciones narrativas tradicionales.',
+    },
+    {
+        id: 9,
+        title: 'La Sombra del Viento',
+        author: 'Carlos Ruiz Zafón',
+        genre: 'Misterio',
+        description: 'Una novela gótica ambientada en la Barcelona de posguerra.',
+    },
+    {
+        id: 10,
+        title: 'Ficciones',
+        author: 'Jorge Luis Borges',
+        genre: 'Cuentos',
+        description: 'Una colección de relatos que exploran los laberintos de la realidad y la imaginación.',
+    },
+    {
+        id: 11,
+        title: 'La Casa de los Espíritus',
+        author: 'Isabel Allende',
+        genre: 'Realismo Mágico',
+        description: 'La saga de una familia chilena a través de varias generaciones.',
+    },
+    {
+        id: 12,
+        title: 'El Túnel',
+        author: 'Ernesto Sabato',
+        genre: 'Novela Psicológica',
+        description: 'Un intenso relato sobre la obsesión, la soledad y la incomunicación humana.',
+    },
+    {
+        id: 13,
+        title: 'Pedro Páramo',
+        author: 'Juan Rulfo',
+        genre: 'Realismo Mágico',
+        description: 'Una obra fundamental de la literatura mexicana que influyó en el boom latinoamericano.',
+    },
+    {
+        id: 14,
+        title: 'Fahrenheit 451',
+        author: 'Ray Bradbury',
+        genre: 'Ciencia Ficción',
+        description: 'Una distopía sobre la censura y la importancia de los libros y el conocimiento.',
+    },
+    {
+        id: 15,
+        title: 'El Amor en los Tiempos del Cólera',
+        author: 'Gabriel García Márquez',
+        genre: 'Realismo Mágico',
+        description: 'Una historia de amor que perdura a través del tiempo y las adversidades.',
+    }
+]
