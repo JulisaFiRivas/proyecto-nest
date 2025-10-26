@@ -1,0 +1,7 @@
+export class UpdateUserDto {
+  username?: string;
+  email?: string;
+  password?: string;
+  profile_picture?: string;
+  role?: 'USER' | 'ADMIN';
+}
