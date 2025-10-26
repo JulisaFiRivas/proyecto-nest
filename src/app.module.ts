@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 import { SeedModule } from './seed/seed.module';
-import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { RatingsModule } from './ratings/ratings.module';
 import { User } from './ratings/entities/user.entity';
@@ -29,8 +28,7 @@ import { Comment } from './comments/entities/comment.entity';
     BooksModule, 
     SeedModule, 
     RatingsModule, 
-    CommentsModule,
-    UsersModule,]
+    CommentsModule,],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { BooksService } from 'src/books/books.service';
-import { UsersService } from 'src/users/users.service';
 import { ratingsData } from './data/rating.seed';
 import { COMMENTS_SEED } from './data/comment.seed';
 
@@ -8,7 +7,6 @@ import { COMMENTS_SEED } from './data/comment.seed';
 export class SeedService {
   constructor(
     private readonly booksService: BooksService,
-    private readonly usersService: UsersService,
   ) {}
 
   /**
