@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { BooksService } from 'src/books/books.service';
 import { UsersService } from 'src/users/users.service';
+import { ratingsData } from './data/rating.seed';
+import { COMMENTS_SEED } from './data/comment.seed';
 
 @Injectable()
 export class SeedService {
@@ -9,7 +11,20 @@ export class SeedService {
     private readonly usersService: UsersService,
   ) {}
 
+  /**
+   * Devuelve los datos de seed para inspección/manual insert.
+   * NOTA: No realiza inserciones a BD para evitar dependencias de TypeORM
+   * si no está configurado. Si quieres que inserte en DB, lo podemos
+   * implementar usando los servicios/repositories adecuados.
+   */
   populateDB() {
-    return 'semilla ejecutada';
+    const books = this.booksService.findAll();
+
+    return {
+      message: 'Seeds listos (no insertados).',
+      books,
+      ratings: ratingsData,
+      comments: COMMENTS_SEED,
+    };
   }
 }

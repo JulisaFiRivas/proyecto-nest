@@ -5,27 +5,32 @@ import { BooksModule } from './books/books.module';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { RatingsModule } from './ratings/ratings.module';
+import { User } from './ratings/entities/user.entity';
+import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from './books/entities/book.entity';
+import { Rating } from './ratings/entities/rating.entity';
+import { Comment } from './comments/entities/comment.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '3306', 10),
-      username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || '',
-      database: process.env.DB_NAME || 'libroteca',
-      entities: [],
+      host: process.env.DB_HOST ?? 'localhost',
+      port: Number(process.env.DB_PORT ?? 3306),
+      username: process.env.DB_USER ?? 'root',
+      password: process.env.DB_PASS ?? '',
+      database: process.env.DB_NAME ?? 'libroteca',
+      entities: [Book, Rating, User, Comment],
       synchronize: false,
-      logging: process.env.DB_LOGGING === 'true',
-      timezone: 'Z',
+      logging: false,
     }),
-    BooksModule,
-    SeedModule,
-    UsersModule,
-  ],
+    BooksModule, 
+    SeedModule, 
+    RatingsModule, 
+    CommentsModule,
+    UsersModule,]
   controllers: [AppController],
   providers: [AppService],
 })
