@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 import { SeedModule } from './seed/seed.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { RatingsModule } from './ratings/ratings.module';
 import { User } from './ratings/entities/user.entity';
 import { CommentsModule } from './comments/comments.module';
@@ -10,7 +12,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Book } from './books/entities/book.entity';
 import { Rating } from './ratings/entities/rating.entity';
 import { Comment } from './comments/entities/comment.entity';
-
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { Comment } from './comments/entities/comment.entity';
     BooksModule, 
     SeedModule, 
     RatingsModule, 
-    CommentsModule],
+    CommentsModule,
+    UsersModule,]
   controllers: [AppController],
   providers: [AppService],
 })

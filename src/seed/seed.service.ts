@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { BooksService } from 'src/books/books.service';
+import { UsersService } from 'src/users/users.service';
 import { ratingsData } from './data/rating.seed';
 import { COMMENTS_SEED } from './data/comment.seed';
 
 @Injectable()
 export class SeedService {
-  constructor(private readonly booksService: BooksService) {}
+  constructor(
+    private readonly booksService: BooksService,
+    private readonly usersService: UsersService,
+  ) {}
 
   /**
    * Devuelve los datos de seed para inspección/manual insert.
