@@ -1,7 +1,7 @@
-import {v4 as uuid} from 'uuid';
 import { Book } from 'src/books/entities/book.entity';
 
-export const BOOK_SEED: Book[] =[
+// Usamos Partial<Book> para no necesitar definir relaciones (userLists) en el seed
+export const BOOK_SEED: Partial<Book>[] =[
     {
         id: 1,
         title: 'Cien Años de Soledad',
