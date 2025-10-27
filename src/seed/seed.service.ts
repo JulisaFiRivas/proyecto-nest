@@ -6,7 +6,9 @@ import { LISTS_SEED } from './data/list.seed';
 
 @Injectable()
 export class SeedService {
-  constructor(private readonly booksService: BooksService) {}
+  constructor(
+    private readonly booksService: BooksService,
+  ) {}
 
   /**
    * Devuelve los datos de seed para inspección/manual insert.
