@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BooksService } from 'src/books/books.service';
 import { ratingsData } from './data/rating.seed';
 import { COMMENTS_SEED } from './data/comment.seed';
+import { LISTS_SEED } from './data/list.seed';
 
 @Injectable()
 export class SeedService {
@@ -23,6 +24,7 @@ export class SeedService {
       books,
       ratings: ratingsData,
       comments: COMMENTS_SEED,
+      lists: LISTS_SEED,
     };
   }
 }

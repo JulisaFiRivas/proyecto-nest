@@ -12,6 +12,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Book } from './books/entities/book.entity';
 import { Rating } from './ratings/entities/rating.entity';
 import { Comment } from './comments/entities/comment.entity';
+import { ListsModule } from './lists/lists.module';
+import { UserBookList } from './lists/entities/user-book-list.entity/user-book-list.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,16 +25,15 @@ import { Comment } from './comments/entities/comment.entity';
       username: process.env.DB_USER ?? 'root',
       password: process.env.DB_PASS ?? '',
       database: process.env.DB_NAME ?? 'libroteca',
-      entities: [Book, Rating, User, Comment],
+      entities: [Book, Rating, User, Comment, UserBookList],
       synchronize: false,
       logging: false,
     }),
-    BooksModule, 
-    SeedModule, 
-    RatingsModule, 
-    CommentsModule,
-    UsersModule,
-  ],
+  BooksModule,
+  SeedModule,
+  RatingsModule,
+  CommentsModule,UsersModule,
+  ListsModule],
   controllers: [AppController],
   providers: [AppService],
 })

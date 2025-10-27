@@ -1,5 +1,6 @@
 import { Rating } from 'src/ratings/entities/rating.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { UserBookList } from '../../lists/entities/user-book-list.entity/user-book-list.entity';
 import {
   Column,
   Entity,
@@ -37,4 +38,8 @@ export class User {
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+    // Relación inversa vice
+  @OneToMany(() => UserBookList, (userBookList) => userBookList.user)
+  bookLists: UserBookList[];
 }

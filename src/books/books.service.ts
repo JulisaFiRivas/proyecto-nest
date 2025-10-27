@@ -1,35 +1,55 @@
-// src/books/books.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Book } from './entities/book.entity';
 import { BOOK_SEED } from '../seed/data/book.seed';
 
 @Injectable()
 export class BooksService {
-  private books: Book[] = [...BOOK_SEED]; // Usar los datos del seed
-
-  findAll(): Book[] {
-    return this.books;
+  constructor(
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>
+  ) {
+    // Podemos inicializar la BD con los seeds si está vacía
+    this.initializeBooks();
   }
 
-  findOne(id: number): Book {
-    const book = this.books.find((b) => b.id === id);
+  private async initializeBooks() {
+    const count = await this.bookRepository.count();
+    if (count === 0) {
+      // Si no hay libros, insertamos los del seed
+      const books = BOOK_SEED.map(book => this.bookRepository.create(book));
+      await this.bookRepository.save(books);
+      console.log('Base de datos inicializada con libros del seed');
+    }
+  }
+
+  async findAll(): Promise<Book[]> {
+    return this.bookRepository.find({
+      order: { id: 'ASC' },
+      relations: ['userLists']
+    });
+  }
+
+  async findOne(id: number): Promise<Book> {
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      relations: ['userLists']
+    });
     if (!book) throw new NotFoundException(`Libro con id ${id} no encontrado`);
     return book;
   }
 
-  create(createBookDto: CreateBookDto): Book {
-    const newBook: Book = {
-      id: this.books.length + 1,
-      ...createBookDto,
-    };
-    this.books.push(newBook);
-    return newBook;
+  async create(createBookDto: CreateBookDto): Promise<Book> {
+    const book = this.bookRepository.create(createBookDto);
+    return this.bookRepository.save(book);
   }
 
-  remove(id: number): void {
-    const index = this.books.findIndex((b) => b.id === id);
-    if (index === -1) throw new NotFoundException(`Libro con id ${id} no encontrado`);
-    this.books.splice(index, 1);
+  async remove(id: number): Promise<void> {
+    const result = await this.bookRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Libro con id ${id} no encontrado`);
+    }
   }
 }

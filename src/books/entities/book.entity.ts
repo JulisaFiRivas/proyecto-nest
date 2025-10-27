@@ -1,6 +1,8 @@
 import { Comment } from '../../comments/entities/comment.entity';
 import { Rating } from '../../ratings/entities/rating.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserBookList } from '../../lists/entities/user-book-list.entity/user-book-list.entity';
+
 
 @Entity('Book')
 export class Book {
@@ -24,4 +26,7 @@ export class Book {
 
   @OneToMany(() => Comment, (comment) => comment.book)
   comments?: Comment[];
+    // Relación inversa vice
+  @OneToMany(() => UserBookList, (userBookList) => userBookList.book)
+  userLists: UserBookList[];
 }
