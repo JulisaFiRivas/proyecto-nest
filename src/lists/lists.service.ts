@@ -17,16 +17,25 @@ export class ListsService {
     private readonly bookRepository: Repository<Book>,
   ) {}
 
-  // CREATE
-  ç
+  // CREAT
   
   async create(createUserBookListDto: CreateUserBookListDto): Promise<UserBookList> {
     const { userId, bookId, status } = createUserBookListDto;
 
     const user = await this.userRepository.findOneBy({ id: userId });
-    const book = await this.bookRepository.findOneBy({ id: bookId });
+    if (!user) {
+      console.log(`User ${userId} not found in database`);
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
 
-    if (!user || !book) throw new NotFoundException('User or Book not found');
+    const book = await this.bookRepository.findOneBy({ id: bookId });
+    if (!book) {
+      console.log(`Book ${bookId} not found in database`);
+      throw new NotFoundException(`Book with id ${bookId} not found`);
+    }
+
+    console.log('Found user:', user);
+    console.log('Found book:', book);
 
     const userBookList = this.userBookListRepository.create({
       user,
@@ -59,6 +68,12 @@ export class ListsService {
     return this.userBookListRepository.save(listItem);
   }
 
+  async findAll(): Promise<UserBookList[]> {
+  return this.userBookListRepository.find({
+    relations: ['user', 'book'],
+    order: { id: 'DESC' },
+  });
+}
   // DELETE - quitar libro de la lista
   async remove(userId: number, bookId: number): Promise<void> {
     const listItem = await this.userBookListRepository.findOne({

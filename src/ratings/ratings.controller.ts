@@ -13,8 +13,7 @@ import { RatingsService } from './ratings.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { AuthGuard } from '@nestjs/passport'; // <-- Asumo que usas JWT
 
-// ¡Importante! El controlador base es 'books'
-@Controller('books')
+@Controller('ratings')
 export class RatingsController {
   constructor(private readonly ratingsService: RatingsService) {}
 

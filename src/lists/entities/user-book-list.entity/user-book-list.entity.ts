@@ -14,7 +14,7 @@ export enum BookStatus {
   DESEO_LEER = 'DESEO_LEER',
 }
 
-@Entity('user_book_list')
+@Entity('userbooklist')
 export class UserBookList {
   @PrimaryGeneratedColumn()
   id: number;

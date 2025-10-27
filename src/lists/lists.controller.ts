@@ -7,6 +7,11 @@ import { UpdateUserBookListDto } from './dto/update-user-book-list.dto/update-us
 export class ListsController {
   constructor(private readonly listsService: ListsService) {}
 
+  @Get()
+  async findAll() {
+  return this.listsService.findAll();
+}
+
   @Post()
   async create(@Request() req, @Body() dto: CreateUserBookListDto) {
     return this.listsService.create(dto);

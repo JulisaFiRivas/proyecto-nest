@@ -4,14 +4,15 @@ import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 import { SeedModule } from './seed/seed.module';
 import { RatingsModule } from './ratings/ratings.module';
-import { User } from './ratings/entities/user.entity';
+import { User } from './users/entities/user.entity';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Book } from './books/entities/book.entity';
 import { Rating } from './ratings/entities/rating.entity';
 import { Comment } from './comments/entities/comment.entity';
 import { ListsModule } from './lists/lists.module';
-
+import { UserBookList } from './lists/entities/user-book-list.entity/user-book-list.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,14 +23,15 @@ import { ListsModule } from './lists/lists.module';
       username: process.env.DB_USER ?? 'root',
       password: process.env.DB_PASS ?? '',
       database: process.env.DB_NAME ?? 'libroteca',
-      entities: [Book, Rating, User, Comment],
+      entities: [Book, Rating, User, Comment, UserBookList],
       synchronize: false,
       logging: false,
     }),
-    BooksModule, 
-    SeedModule, 
-    RatingsModule, 
-    CommentsModule],
+  BooksModule,
+  SeedModule,
+  RatingsModule,
+  CommentsModule,UsersModule,
+  ListsModule],
   controllers: [AppController],
   providers: [AppService],
 })
