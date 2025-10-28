@@ -68,6 +68,15 @@ export class UsersService {
     return user;
   }
 
+  // Métodos internos que NO lanzan excepciones (para uso en AuthService)
+  async findByEmailInternal(email: string) {
+    return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async findByUsernameInternal(username: string) {
+    return await this.userRepository.findOne({ where: { username } });
+  }
+
   async remove(id: number) {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {

@@ -19,106 +19,19 @@ cd proyecto-nest
 npm install
 ```
 
-3. **Levantar el proyecto**
+3. **clonar la base de datos con el archivo libroteca.sql**
+este proyecto usa xampp con phpmyadmin
+
+4. **Levantar el proyecto**
 ```bash
 npm start
 ```
 
-4. **Reconstruir la base de datos con la semilla**
+5. **Reconstruir la base de datos con la semilla**
 ```bash
 GET http://localhost:3000/seed
 ```
 
-## ENDPOINTS DISPONIBLES
-
-### Base URL: `http://localhost:3000`
-
-### Books (Libros)
-
-#### GET `/books`
-- **Descripción:** Obtiene todos los libros disponibles
-- **Método:** GET
-- **URL:** `http://localhost:3000/books`
-- **Respuesta:** Array de objetos Book
-- **Ejemplo de respuesta:**
-```json
-[
-  {
-    "id": 1,
-    "title": "Cien Años de Soledad",
-    "author": "Gabriel García Márquez",
-    "genre": "Realismo Mágico",
-    "description": "Una novela emblemática de la literatura latinoamericana."
-  }
-]
-```
-
-#### GET `/books/:id`
-- **Descripción:** Obtiene un libro específico por su ID
-- **Método:** GET
-- **URL:** `http://localhost:3000/books/1`
-- **Parámetros:** 
-  - `id` (number): ID del libro
-- **Respuesta:** Objeto Book
-- **Ejemplo de respuesta:**
-```json
-{
-  "id": 1,
-  "title": "Cien Años de Soledad",
-  "author": "Gabriel García Márquez",
-  "genre": "Realismo Mágico",
-  "description": "Una novela emblemática de la literatura latinoamericana."
-}
-```
-
-#### POST `/books`
-- **Descripción:** Crea un nuevo libro
-- **Método:** POST
-- **URL:** `http://localhost:3000/books`
-- **Headers:** `Content-Type: application/json`
-- **Body (JSON):**
-```json
-{
-  "title": "Nombre del libro",
-  "author": "Autor del libro",
-  "genre": "Género literario",
-  "description": "Descripción opcional del libro"
-}
-```
-- **Respuesta:** Objeto Book creado
-- **Ejemplo de respuesta:**
-```json
-{
-  "id": 16,
-  "title": "Nombre del libro",
-  "author": "Autor del libro",
-  "genre": "Género literario",
-  "description": "Descripción opcional del libro"
-}
-```
-
-#### DELETE `/books/:id`
-- **Descripción:** Elimina un libro específico por su ID
-- **Método:** DELETE
-- **URL:** `http://localhost:3000/books/1`
-- **Parámetros:** 
-  - `id` (number): ID del libro a eliminar
-- **Respuesta:** Sin contenido (status 200)
-
-### Seed
-
-#### GET `/seed`
-- **Descripción:** Reconstruye la base de datos con datos de prueba (15 libros predefinidos)
-- **Método:** GET
-- **URL:** `http://localhost:3000/seed`
-- **Respuesta:** Mensaje de confirmación
-- **Ejemplo de respuesta:**
-```json
-{
-  "message": "Seed executed successfully",
-  "booksCreated": 15
-}
-```
 
 ## Stack Tecnológico
 
@@ -131,6 +44,15 @@ GET http://localhost:3000/seed
 
 ```
 src/
+├── auth/
+│   ├── dto/
+│   │   ├── login.dto.ts
+│   │   └── register.dto.ts
+│   ├── strategies/
+│   │   └── jwt.strategy.ts
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── auth.module.ts
 ├── books/
 │   ├── dto/
 │   │   └── create-book.dto.ts
@@ -139,12 +61,52 @@ src/
 │   ├── books.controller.ts
 │   ├── books.service.ts
 │   └── books.module.ts
+├── comments/
+│   ├── dto/
+│   │   ├── create-comment.dto.ts
+│   │   └── update-comment.dto.ts
+│   ├── entities/
+│   │   └── comment.entity.ts
+│   ├── comments.controller.ts
+│   ├── comments.service.ts
+│   └── comments.module.ts
+├── lists/
+│   ├── dto/
+│   │   ├── create-list.dto.ts
+│   │   └── update-list.dto.ts
+│   ├── entities/
+│   │   └── user-book-list.entity.ts
+│   ├── lists.controller.ts
+│   ├── lists.service.ts
+│   └── lists.module.ts
+├── ratings/
+│   ├── dto/
+│   │   ├── create-rating.dto.ts
+│   │   └── update-rating.dto.ts
+│   ├── entities/
+│   │   └── rating.entity.ts
+│   ├── ratings.controller.ts
+│   ├── ratings.service.ts
+│   └── ratings.module.ts
 ├── seed/
 │   ├── data/
-│   │   └── book.seed.ts
+│   │   ├── book.seed.ts
+│   │   ├── comment.seed.ts
+│   │   └── rating.seed.ts
 │   ├── seed.controller.ts
 │   ├── seed.service.ts
 │   └── seed.module.ts
+├── users/
+│   ├── dto/
+│   │   ├── create-user.dto.ts
+│   │   └── update-user.dto.ts
+│   ├── entities/
+│   │   └── user.entity.ts
+│   ├── users.controller.ts
+│   ├── users.service.ts
+│   └── users.module.ts
+├── app.controller.ts
+├── app.service.ts
 ├── app.module.ts
 └── main.ts
-``
+```

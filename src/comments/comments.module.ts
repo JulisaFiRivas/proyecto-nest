@@ -10,6 +10,6 @@ import { User } from 'src/users/entities/user.entity';
   imports: [TypeOrmModule.forFeature([Comment, Book, User])],
   providers: [CommentsService],
   controllers: [CommentsController],
-  exports: [CommentsService],
+  exports: [CommentsService, TypeOrmModule],
 })
 export class CommentsModule {}

@@ -1,41 +1,38 @@
 // src/seed/data/comment.seed.ts
-// Seed de comentarios de ejemplo. Asegúrate de que los user_id y book_id
-// referenciados existan en los seeds de usuarios y libros.
-
 export const COMMENTS_SEED = [
   {
     id: 1,
-    content: 'Maravilloso libro, lo recomiendo mucho.',
+    content: 'Reemplazo completo',
     user_id: 1,
-    book_id: 1,
-    parent_comment_id: null,
-  },
-  {
-    id: 2,
-    content: 'No estuve de acuerdo con el final, aunque la prosa es excelente.',
-    user_id: 2,
     book_id: 1,
     parent_comment_id: null,
   },
   {
     id: 3,
-    content: 'Respuesta al comentario: entiendo tu punto, pero creo que... ',
+    content: 'Un libro que te cambia la perspectiva. Aterrador y brillante.',
     user_id: 3,
-    book_id: 1,
-    parent_comment_id: 2,
-  },
-  {
-    id: 4,
-    content: 'Un clásico que siempre vale la pena releer.',
-    user_id: 1,
-    book_id: 2,
+    book_id: 4,
     parent_comment_id: null,
   },
   {
-    id: 5,
-    content: 'Me gustó mucho la construcción de personajes.',
+    id: 4,
+    content: 'Totalmente de acuerdo, Ana. La prosa de GGM es inigualable.',
     user_id: 2,
+    book_id: 1,
+    parent_comment_id: 1,
+  },
+  {
+    id: 5,
+    content: 'A mi hijo también le fascinó, Benito. Gran inicio de saga.',
+    user_id: 1,
     book_id: 3,
+    parent_comment_id: null,
+  },
+  {
+    id: 6,
+    content: 'Maravilloso libro, lo recomiendo.',
+    user_id: 1,
+    book_id: 1,
     parent_comment_id: null,
   },
 ];

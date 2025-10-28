@@ -3,8 +3,7 @@ import { Rating } from '../../ratings/entities/rating.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserBookList } from '../../lists/entities/user-book-list.entity/user-book-list.entity';
 
-
-@Entity('Book')
+@Entity('book')
 export class Book {
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,11 +11,17 @@ export class Book {
   @Column()
   title: string;
 
-  @Column()
-  author: string;
+  @Column({ type: 'text', nullable: true })
+  synopsis?: string;
 
-  @Column()
-  genre: string;
+  @Column({ nullable: true })
+  cover_image_url?: string;
+
+  @Column({ nullable: true })
+  author?: string;
+
+  @Column({ nullable: true })
+  genre?: string;
 
   @Column({ type: 'text', nullable: true })
   description?: string;
@@ -26,7 +31,7 @@ export class Book {
 
   @OneToMany(() => Comment, (comment) => comment.book)
   comments?: Comment[];
-    // Relación inversa vice
+
   @OneToMany(() => UserBookList, (userBookList) => userBookList.book)
   userLists: UserBookList[];
 }

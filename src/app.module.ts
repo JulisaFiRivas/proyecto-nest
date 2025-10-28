@@ -5,7 +5,6 @@ import { BooksModule } from './books/books.module';
 import { SeedModule } from './seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import { RatingsModule } from './ratings/ratings.module';
-import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,6 +14,7 @@ import { Comment } from './comments/entities/comment.entity';
 import { ListsModule } from './lists/lists.module';
 import { UserBookList } from './lists/entities/user-book-list.entity/user-book-list.entity';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,8 +32,11 @@ import { UsersModule } from './users/users.module';
   BooksModule,
   SeedModule,
   RatingsModule,
-  CommentsModule,UsersModule,
-  ListsModule],
+  CommentsModule,
+  UsersModule,
+  ListsModule,
+  AuthModule,
+],
   controllers: [AppController],
   providers: [AppService],
 })

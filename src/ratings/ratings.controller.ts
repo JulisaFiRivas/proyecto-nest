@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
-import { AuthGuard } from '@nestjs/passport'; // <-- Asumo que usas JWT
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('ratings')
 export class RatingsController {
@@ -19,15 +19,15 @@ export class RatingsController {
 
   /**
    * [CREATE / UPDATE]
-   * Endpoint: POST /books/:book_id/rating
+   * Endpoint: POST /ratings/:book_id/rating
    * Protegido por autenticación.
    */
   @Post(':book_id/rating')
-  @UseGuards(AuthGuard('jwt')) // Protege esta ruta
+  @UseGuards(AuthGuard('jwt'))
   create(
     @Param('book_id', ParseIntPipe) book_id: number,
     @Body() createRatingDto: CreateRatingDto,
-    @Req() req: any, // Usamos @Req para obtener el usuario del token
+    @Req() req: any,
   ) {
     // req.user.id viene del payload del token JWT
     const user_id = req.user.id; 
@@ -36,7 +36,7 @@ export class RatingsController {
 
   /**
    * [READ]
-   * Endpoint: GET /books/:book_id/rating
+   * Endpoint: GET /ratings/:book_id/rating
    * Es público, no necesita @UseGuards
    */
   @Get(':book_id/rating')

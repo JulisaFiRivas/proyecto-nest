@@ -10,5 +10,6 @@ import { User } from 'src/users/entities/user.entity'; // <-- agrega esta línea
   imports: [TypeOrmModule.forFeature([UserBookList, Book, User])], // <-- agrega User aquí
   controllers: [ListsController],
   providers: [ListsService],
+  exports: [TypeOrmModule],
 })
 export class ListsModule {}

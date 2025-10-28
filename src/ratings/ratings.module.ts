@@ -17,5 +17,6 @@ import { User } from 'src/users/entities/user.entity';
   ],
   controllers: [RatingsController],
   providers: [RatingsService],
+  exports: [TypeOrmModule],
 })
 export class RatingsModule {}
