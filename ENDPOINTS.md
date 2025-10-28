@@ -4,6 +4,13 @@ Base URL: `http://localhost:3000`
 
 ---
 
+## Seed (Datos de Prueba)
+
+### Poblar base de datos
+```
+GET /seed
+```
+
 ## Autenticación
 
 **Para usar un endpoint protegido:**
@@ -283,30 +290,5 @@ PATCH /users/:id
 ```
 DELETE /users/:id
 ```
-
----
-
-## Seed (Datos de Prueba)
-
-### Poblar base de datos
-```
-GET /seed
-```
-**Nota:** Limpia todas las tablas e inserta datos de prueba
-
----
-
-## 📊 Resumen
-
-| Módulo | Endpoints |
-|--------|-----------|
-| Auth | 3 |
-| Books | 4 |
-| Ratings | 2 |
-| Comments | 6 |
-| Lists | 5 |
-| Users | 8 |
-| Seed | 1 |
-| **TOTAL** | **29** |
 
 ---
