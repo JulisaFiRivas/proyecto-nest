@@ -20,7 +20,7 @@ npm install
 ```
 
 3. **clonar la base de datos con el archivo libroteca.sql**
-este proyecto usa xampp con phpmyadmin
+ (este proyecto usa xampp con phpmyadmin)
 
 4. **Levantar el proyecto**
 ```bash
