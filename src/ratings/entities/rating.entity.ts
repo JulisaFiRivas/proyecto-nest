@@ -9,7 +9,7 @@ import {
   Unique,
 } from 'typeorm';
 
-@Entity('Rating') // Le decimos que esta clase mapea la tabla 'Rating'
+@Entity('rating') // Nombre de la tabla en minúsculas
 @Unique('uk_user_book_rating', ['user', 'book']) // Tu restricción UNIQUE
 export class Rating {
   @PrimaryGeneratedColumn()
