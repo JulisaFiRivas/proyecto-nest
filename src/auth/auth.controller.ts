@@ -3,6 +3,9 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './decorators/get-user.decorator';
+import { Auth } from './decorators/auth.decorator';
+import { ValidRoles } from './interfaces/valid-roles';
 
 @Controller('auth')
 export class AuthController {
@@ -22,5 +25,17 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async getProfile(@Req() req: any) {
     return req.user;
+  }
+  //Ruta solo accesible por el ADMIN
+  @Get('private1')
+  @Auth(ValidRoles.admin)
+  privateRoute1(
+    @GetUser() user: any
+  ) {
+    return {
+      ok: true,
+      message: 'Hola Admin.',
+      user
+    };
   }
 }
