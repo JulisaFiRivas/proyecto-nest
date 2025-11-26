@@ -52,4 +52,15 @@ export class BooksService {
       throw new NotFoundException(`Libro con id ${id} no encontrado`);
     }
   }
+
+  async update(id: number, updateBookDto: CreateBookDto): Promise<Book> {
+    const book = await this.bookRepository.preload({
+      id: id,
+      ...updateBookDto
+    });
+
+    if (!book) throw new NotFoundException(`Libro con id ${id} no encontrado`);
+
+    return this.bookRepository.save(book);
+  }
 }
