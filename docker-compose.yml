@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Servicio de Base de Datos MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: libroteca-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: libroteca
+      MYSQL_USER: libroteca_user
+      MYSQL_PASSWORD: libroteca_password
+    command: --sql-mode="NO_ENGINE_SUBSTITUTION" --explicit_defaults_for_timestamp=1
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./libroteca.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - libroteca-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Servicio de la Aplicación NestJS
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: libroteca-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: libroteca_user
+      DB_PASS: libroteca_password
+      DB_NAME: libroteca
+      JWT_SECRET: tu_super_secreto_jwt_cambiar_en_produccion_2024
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - libroteca-network
+
+# Definición de volúmenes para persistencia
+volumes:
+  mysql_data:
+    driver: local
+
+# Red privada para comunicación entre servicios
+networks:
+  libroteca-network:
+    driver: bridge
