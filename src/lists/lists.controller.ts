@@ -1,7 +1,10 @@
-import { Controller, Post, Get, Patch, Delete, Body, Param, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Body, Param, Request, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { ListsService } from './lists.service';
 import { CreateUserBookListDto } from './dto/create-user-book-list.dto/create-user-book-list.dto';
 import { UpdateUserBookListDto } from './dto/update-user-book-list.dto/update-user-book-list.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('lists')
 export class ListsController {
@@ -13,26 +16,35 @@ export class ListsController {
 }
 
   @Post()
-  async create(@Request() req, @Body() dto: CreateUserBookListDto) {
-    return this.listsService.create(dto);
+  @Auth()
+  async create(@Body() dto: CreateUserBookListDto, @GetUser() user: User) {
+    return this.listsService.create(dto, user.id);
   }
 
   @Get(':userId')
-  async findByUser(@Param('userId') userId: number) {
-    return this.listsService.findByUser(userId);
+  @Auth()
+  async findByUser(@Param('userId', ParseIntPipe) userId: number, @GetUser() user: User) {
+    return this.listsService.findByUser(userId, user.id);
   }
 
   @Patch(':userId/:bookId')
+  @Auth()
   async updateStatus(
-    @Param('userId') userId: number,
-    @Param('bookId') bookId: number,
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('bookId', ParseIntPipe) bookId: number,
     @Body() dto: UpdateUserBookListDto,
+    @GetUser() user: User,
   ) {
-    return this.listsService.updateStatus(userId, bookId, dto.status);
+    return this.listsService.updateStatus(userId, bookId, dto.status, user.id);
   }
 
   @Delete(':userId/:bookId')
-  async remove(@Param('userId') userId: number, @Param('bookId') bookId: number) {
-    return this.listsService.remove(userId, bookId);
+  @Auth()
+  async remove(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @GetUser() user: User,
+  ) {
+    return this.listsService.remove(userId, bookId, user.id);
   }
 }

@@ -20,17 +20,17 @@ export class CommentsService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(dto: CreateCommentDto) {
+  async create(dto: CreateCommentDto, user_id: number) {
     // Validate book and user existence (if repositories are available)
     const book = await this.bookRepository.findOneBy({ id: dto.book_id } as any);
     if (!book) throw new NotFoundException(`Libro con id ${dto.book_id} no encontrado`);
 
-    const user = await this.userRepository.findOneBy({ id: dto.user_id } as any);
-    if (!user) throw new NotFoundException(`Usuario con id ${dto.user_id} no encontrado`);
+    const user = await this.userRepository.findOneBy({ id: user_id } as any);
+    if (!user) throw new NotFoundException(`Usuario con id ${user_id} no encontrado`);
 
     const comment = this.commentRepository.create({
       content: dto.content,
-      user_id: dto.user_id,
+      user_id: user_id,
       book_id: dto.book_id,
       parent_comment_id: dto.parent_comment_id ?? null,
     } as any);
@@ -52,18 +52,27 @@ export class CommentsService {
     return comment;
   }
 
-  async remove(id: number) {
+  async remove(id: number, user_id: number) {
+    const comment = await this.findOne(id);
+    // Verificar que el usuario sea el propietario del comentario
+    if (comment.user_id !== user_id) {
+      throw new NotFoundException(`No tienes permiso para eliminar este comentario`);
+    }
     const result = await this.commentRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException(`Comment con id ${id} no encontrado`);
     return { deleted: true };
   }
 
-  async replace(id: number, dto: CreateCommentDto) {
-    await this.findOne(id);
+  async replace(id: number, dto: CreateCommentDto, user_id: number) {
+    const comment = await this.findOne(id);
+    // Verificar que el usuario sea el propietario del comentario
+    if (comment.user_id !== user_id) {
+      throw new NotFoundException(`No tienes permiso para actualizar este comentario`);
+    }
     const toSave = {
       id,
       content: dto.content,
-      user_id: dto.user_id,
+      user_id: comment.user_id,
       book_id: dto.book_id,
       parent_comment_id: dto.parent_comment_id ?? null,
     } as any;
@@ -71,8 +80,12 @@ export class CommentsService {
     return this.commentRepository.save(toSave);
   }
 
-  async update(id: number, dto: UpdateCommentDto) {
+  async update(id: number, dto: UpdateCommentDto, user_id: number) {
     const comment = await this.findOne(id);
+    // Verificar que el usuario sea el propietario del comentario
+    if (comment.user_id !== user_id) {
+      throw new NotFoundException(`No tienes permiso para actualizar este comentario`);
+    }
     Object.assign(comment, dto);
     return this.commentRepository.save(comment as any);
   }

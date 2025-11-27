@@ -13,14 +13,18 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  @Auth()
+  create(@Body() createCommentDto: CreateCommentDto, @GetUser() user: User) {
+    return this.commentsService.create(createCommentDto, user.id);
   }
 
   @Get()
@@ -35,17 +39,20 @@ export class CommentsController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.commentsService.remove(id);
+  @Auth()
+  remove(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
+    return this.commentsService.remove(id, user.id);
   }
 
   @Put(':id')
-  replace(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateCommentDto) {
-    return this.commentsService.replace(id, dto);
+  @Auth()
+  replace(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateCommentDto, @GetUser() user: User) {
+    return this.commentsService.replace(id, dto, user.id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCommentDto) {
-    return this.commentsService.update(id, dto);
+  @Auth()
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCommentDto, @GetUser() user: User) {
+    return this.commentsService.update(id, dto, user.id);
   }
 }
