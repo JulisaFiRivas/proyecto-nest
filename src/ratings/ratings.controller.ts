@@ -6,12 +6,12 @@ import {
   Body,
   Param,
   ParseIntPipe,
-  UseGuards,
-  Req,
 } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('ratings')
 export class RatingsController {
@@ -23,14 +23,14 @@ export class RatingsController {
    * Protegido por autenticación.
    */
   @Post(':book_id/rating')
-  @UseGuards(AuthGuard('jwt'))
+  @Auth()
   create(
     @Param('book_id', ParseIntPipe) book_id: number,
     @Body() createRatingDto: CreateRatingDto,
-    @Req() req: any,
+    @GetUser() user: User,
   ) {
-    // req.user.id viene del payload del token JWT
-    const user_id = req.user.id; 
+    // user.id viene del JWT vía @GetUser()
+    const user_id = user.id; 
     return this.ratingsService.createOrUpdate(createRatingDto, book_id, user_id);
   }
 

@@ -13,6 +13,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { ValidRoles } from 'src/auth/interfaces/valid-roles';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +28,7 @@ export class UsersController {
   }
 
   @Get()
+  @Auth(ValidRoles.admin)
   findAll(
     @Query('username') username?: string,
     @Query('email') email?: string,
@@ -34,22 +39,26 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  @Auth()
+  findOne(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
     return this.usersService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+  @Auth()
+  remove(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
+    return this.usersService.remove(id, user.id, user.role);
   }
 
   @Put(':id')
-  replace(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateUserDto) {
-    return this.usersService.replace(id, dto);
+  @Auth()
+  replace(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateUserDto, @GetUser() user: User) {
+    return this.usersService.replace(id, dto, user.id, user.role);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(id, dto);
+  @Auth()
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto, @GetUser() user: User) {
+    return this.usersService.update(id, dto, user.id, user.role);
   }
 }
