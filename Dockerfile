@@ -1,6 +1,4 @@
-# ============================================
 # ETAPA 1: DEPS - Instalar dependencias
-# ============================================
 FROM node:20-alpine AS deps
 
 WORKDIR /app
@@ -11,9 +9,7 @@ COPY package*.json ./
 # Instalar TODAS las dependencias (incluyendo devDependencies)
 RUN npm ci
 
-# ============================================
 # ETAPA 2: BUILDER - Compilar la aplicación
-# ============================================
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -27,9 +23,7 @@ COPY . .
 # Compilar la aplicación NestJS
 RUN npm run build
 
-# ============================================
 # ETAPA 3: RUNNER - Imagen de producción
-# ============================================
 FROM node:20-alpine AS runner
 
 WORKDIR /app
