@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Libroteca API - Collection",
+    "_postman_id": "libroteca-collection",
+    "description": "Colección básica para probar endpoints públicos y protegidos. Variables: {{baseUrl}}, {{token}}",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Seed - Poblar DB",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/seed", "host": ["{{baseUrl}}"], "path": ["seed"] }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\"email\": \"carla@email.com\", \"password\": \"admin123\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] }
+      }
+    },
+    {
+      "name": "Auth - Profile (requires token)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" } ],
+        "url": { "raw": "{{baseUrl}}/auth/profile", "host": ["{{baseUrl}}"], "path": ["auth","profile"] }
+      }
+    },
+    {
+      "name": "Books - List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/books", "host": ["{{baseUrl}}"], "path": ["books"] }
+      }
+    },
+    {
+      "name": "Books - Create (ADMIN)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\"title\":\"Libro desde Postman\",\"author\":\"Admin\",\"genre\":\"Test\"}" },
+        "url": { "raw": "{{baseUrl}}/books", "host": ["{{baseUrl}}"], "path": ["books"] }
+      }
+    },
+    {
+      "name": "Ratings - Get Average",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/ratings/1/rating", "host": ["{{baseUrl}}"], "path": ["ratings","1","rating"] }
+      }
+    },
+    {
+      "name": "Ratings - Create/Update (AUTH)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\"score\":5}" },
+        "url": { "raw": "{{baseUrl}}/ratings/1/rating", "host": ["{{baseUrl}}"], "path": ["ratings","1","rating"] }
+      }
+    },
+    {
+      "name": "Comments - Create (AUTH)",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\"content\":\"Comentario desde Postman\",\"book_id\":1}" },
+        "url": { "raw": "{{baseUrl}}/comments", "host": ["{{baseUrl}}"], "path": ["comments"] }
+      }
+    }
+  ]
+}

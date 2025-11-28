@@ -30,8 +30,8 @@ POST /auth/register
   "username": "johndoe",
   "email": "john@example.com",
   "password": "123456",
-  "profile_picture": "url", // Opcional
-  "role": "USER" // Opcional: USER o ADMIN
+  "profile_picture": "url", 
+  "role": "USER" 
 }
 ```
 
@@ -78,217 +78,185 @@ POST /books
   "title": "El Quijote",
   "author": "Cervantes",
   "genre": "Novela",
-  "description": "Descripción del libro" // Opcional
+  "description": "Descripción del libro"
 }
 ```
 
 ### Eliminar un libro
+# Documentación de Endpoints - Libroteca API
+
+Base URL: `http://localhost:3000`
+
+---
+
+## Seed (Datos de Prueba)
+
+### Poblar base de datos
 ```
-DELETE /books/:id
+GET /seed
 ```
-**Ejemplo:** `DELETE /books/1`
+
+---
+
+## Autenticación
+
+### Registrar usuario
+```
+POST /auth/register
+```
+Body:
+```json
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "123456",
+  "profile_picture": "url",
+  "role": "USER"
+}
+```
+
+### Iniciar sesión
+```
+POST /auth/login
+```
+Body:
+```json
+{
+  "email": "john@example.com",
+  "password": "123456"
+}
+```
+Respuesta:
+```json
+{ "access_token": "<JWT>" }
+```
+
+### Obtener perfil (requiere token)
+```
+GET /auth/profile
+Authorization: Bearer {token}
+```
+
+### Ruta privada solo ADMIN
+```
+GET /auth/private1
+Authorization: Bearer {token}
+Roles: ADMIN
+```
+
+---
+
+## Libros (Books)
+
+- `GET /books` — Público
+- `GET /books/:id` — Público
+- `POST /books` — Requiere token + role `ADMIN`
+- `PATCH /books/:id` — Requiere token + role `ADMIN`
+- `DELETE /books/:id` — Requiere token + role `ADMIN`
+
+Ejemplo (crear libro como ADMIN):
+```
+curl -X POST http://localhost:3000/books \
+  -H "Authorization: Bearer <JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Mi Libro","author":"Autor","genre":"Ficción"}'
+```
 
 ---
 
 ## Calificaciones (Ratings)
 
-### Calificar un libro (requiere token)
-```
-POST /ratings/:book_id/rating
-Authorization: Bearer {token}
-```
-**Body:**
-```json
-{
-  "score": 5
-}
-```
-**Nota:** Score debe ser entre 1 y 5
+- `POST /ratings/:book_id/rating` — Requiere token (cualquier usuario)
+- `GET /ratings/:book_id/rating` — Público (promedio)
 
-### Obtener promedio de calificaciones
+Ejemplo (calificar libro):
 ```
-GET /ratings/:book_id/rating
+curl -X POST http://localhost:3000/ratings/1/rating \
+  -H "Authorization: Bearer <JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{"score":5}'
 ```
-**Ejemplo:** `GET /ratings/1/rating`
 
 ---
 
 ## Comentarios (Comments)
 
-### Obtener todos los comentarios
-```
-GET /comments
-```
+- `POST /comments` — Requiere token (cualquier usuario)
+- `GET /comments` — Público
+- `GET /comments?book_id=1` — Público
+- `GET /comments/:id` — Público
+- `PUT /comments/:id` — Requiere token (propietario)
+- `PATCH /comments/:id` — Requiere token (propietario)
+- `DELETE /comments/:id` — Requiere token (propietario)
 
-### Obtener comentarios de un libro
+Ejemplo (crear comentario):
 ```
-GET /comments?book_id=1
-```
-
-### Obtener un comentario por ID
-```
-GET /comments/:id
-```
-**Ejemplo:** `GET /comments/1`
-
-### Crear un comentario
-```
-POST /comments
-```
-**Body:**
-```json
-{
-  "content": "Excelente libro!",
-  "user_id": 1,
-  "book_id": 1,
-  "parent_comment_id": 5 // Opcional (para respuestas)
-}
-```
-
-### Actualizar comentario (reemplazo completo)
-```
-PUT /comments/:id
-```
-**Body:**
-```json
-{
-  "content": "Nuevo contenido",
-  "user_id": 1,
-  "book_id": 1
-}
-```
-
-### Actualizar comentario (parcial)
-```
-PATCH /comments/:id
-```
-**Body:**
-```json
-{
-  "content": "Contenido actualizado"
-}
-```
-
-### Eliminar comentario
-```
-DELETE /comments/:id
+curl -X POST http://localhost:3000/comments \
+  -H "Authorization: Bearer <JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Excelente!","book_id":1}'
 ```
 
 ---
 
 ## Listas de Lectura (Lists)
 
-### Obtener todas las listas
-```
-GET /lists
-```
+- `GET /lists` — Público
+- `POST /lists` — Requiere token (crear lista/entrada para usuario autenticado)
+- `GET /lists/:userId` — Requiere token (consulta de listas; el guard controla acceso según implementación)
+- `PATCH /lists/:userId/:bookId` — Requiere token (propietario)
+- `DELETE /lists/:userId/:bookId` — Requiere token (propietario)
 
-### Obtener listas de un usuario
+Ejemplo (agregar a lista):
 ```
-GET /lists/:userId
+curl -X POST http://localhost:3000/lists \
+  -H "Authorization: Bearer <JWT>" \
+  -H "Content-Type: application/json" \
+  -d '{"userId":1,"bookId":2,"status":"DESEO_LEER"}'
 ```
-**Ejemplo:** `GET /lists/1`
-
-### Agregar libro a lista
-```
-POST /lists
-```
-**Body:**
-```json
-{
-  "userId": 1,
-  "bookId": 2,
-  "status": "DESEO_LEER"
-}
-```
-**Status:** `LEIDO` o `DESEO_LEER`
-
-### Actualizar estado de un libro en lista
-```
-PATCH /lists/:userId/:bookId
-```
-**Ejemplo:** `PATCH /lists/1/2`
-
-**Body:**
-```json
-{
-  "status": "LEIDO"
-}
-```
-
-### Eliminar libro de lista
-```
-DELETE /lists/:userId/:bookId
-```
-**Ejemplo:** `DELETE /lists/1/2`
 
 ---
 
 ## Usuarios (Users)
 
-### Obtener todos los usuarios
+- `POST /users` — Público (registro)
+- `GET /users` — Requiere token + role `ADMIN` (lista completa)
+- `GET /users?username=...` — Requiere token + role `ADMIN` or según implementación
+- `GET /users/:id` — Requiere token
+- `PUT /users/:id` — Requiere token (propietario o admin según servicio)
+- `PATCH /users/:id` — Requiere token
+- `DELETE /users/:id` — Requiere token
+
+---
+
+## Errores frecuentes (401 / 403)
+
+- 401 Unauthorized: Cuando no se envía token o el token es inválido/expirado.
+  - Ejemplo: respuesta HTTP 401
+  ```json
+  { "statusCode": 401, "message": "Unauthorized" }
+  ```
+
+- 403 Forbidden: Cuando el usuario autenticado no tiene el rol necesario.
+  - Ejemplo (guardas de roles retornan mensaje):
+  ```json
+  { "statusCode": 403, "message": "User carla_admin needs a valid role: [ADMIN]", "error": "Forbidden" }
+  ```
+
+---
+
+## Ejemplo de flujo rápido (cURL)
+
+1) Login (obtener token)
 ```
-GET /users
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"carla@email.com","password":"admin123"}'
 ```
 
-### Buscar usuario por username
+2) Usar token para acceder a ruta protegida
 ```
-GET /users?username=johndoe
-```
-
-### Buscar usuario por email
-```
-GET /users?email=john@example.com
-```
-
-### Obtener un usuario por ID
-```
-GET /users/:id
-```
-**Ejemplo:** `GET /users/1`
-
-### Crear usuario
-```
-POST /users
-```
-**Body:**
-```json
-{
-  "username": "johndoe",
-  "email": "john@example.com",
-  "password": "123456",
-  "profile_picture": "url", // Opcional
-  "role": "USER" // Opcional: USER o ADMIN
-}
-```
-
-### Actualizar usuario (reemplazo completo)
-```
-PUT /users/:id
-```
-**Body:**
-```json
-{
-  "username": "newusername",
-  "email": "newemail@example.com",
-  "password": "newpassword"
-}
-```
-
-### Actualizar usuario (parcial)
-```
-PATCH /users/:id
-```
-**Body:**
-```json
-{
-  "username": "updated_username"
-}
-```
-
-### Eliminar usuario
-```
-DELETE /users/:id
+curl -H "Authorization: Bearer <JWT>" http://localhost:3000/auth/profile
 ```
 
 ---
