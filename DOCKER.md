@@ -1,4 +1,4 @@
-# 🐳 Guía de Docker - Libroteca API
+# Guía de Docker - Libroteca API
 
 ## Instrucciones Rápidas
 
@@ -17,8 +17,8 @@ docker-compose up -d
 ```
 
 Esto levantará:
-- ✅ Base de datos MySQL en puerto 3307
-- ✅ Aplicación NestJS en puerto 3000
+- Base de datos MySQL en puerto 3307
+- Aplicación NestJS en puerto 3000
 
 ### 3. Ver logs de la aplicación
 

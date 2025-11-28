@@ -1,14 +1,14 @@
-# ✅ Docker & Infraestructura - COMPLETADO
+# Docker & Infraestructura - COMPLETADO
 
 ## Archivos Creados
 
-### 1. **Dockerfile** ✅
+### 1. **Dockerfile** 
 - Multi-stage build con 3 etapas (deps, builder, runner)
 - Imagen optimizada de producción
 - Usuario no-root para seguridad
 - Node.js 20 Alpine (imagen ligera)
 
-### 2. **docker-compose.yml** ✅
+### 2. **docker-compose.yml**
 - Servicio MySQL 8.0 con persistencia
 - Servicio NestJS con health checks
 - Variables de entorno configuradas
@@ -16,40 +16,40 @@
 - Puerto 3307 para MySQL (evita conflictos con MySQL local)
 - Puerto 3000 para la aplicación
 
-### 3. **.env.example** ✅
+### 3. **.env.example** 
 - Template de variables de entorno
 - Documentadas todas las variables necesarias
 
-### 4. **.dockerignore** ✅
+### 4. **.dockerignore** 
 - Excluye archivos innecesarios de la imagen Docker
 - Reduce tamaño de la imagen
 
-### 5. **.env** ✅
+### 5. **.env**
 - Archivo local para desarrollo
 - Configurado para MySQL local (XAMPP)
 
 ## Archivos Modificados
 
-### 1. **src/app.module.ts** ✅
+### 1. **src/app.module.ts**
 - ConfigModule.forRoot() implementado
 - Validación de variables de entorno con Joi
 - TypeORM usando ConfigService (sin process.env)
 - isGlobal: true para disponibilidad global
 
-### 2. **src/main.ts** ✅
+### 2. **src/main.ts** 
 - ValidationPipe global configurado
 - whitelist, forbidNonWhitelisted, transform activados
 - Puerto obtenido desde ConfigService
 
-### 3. **src/auth/auth.module.ts** ✅
+### 3. **src/auth/auth.module.ts** 
 - JwtModule usando ConfigService
 - JWT_SECRET desde variables de entorno
 
-### 4. **src/auth/strategies/jwt.strategy.ts** ✅
+### 4. **src/auth/strategies/jwt.strategy.ts** 
 - ConfigService inyectado
 - JWT_SECRET desde configuración (no process.env)
 
-### 5. **src/config/env.validation.ts** ✅ (NUEVO)
+### 5. **src/config/env.validation.ts** (NUEVO)
 - Schema de validación con Joi
 - Valida todas las variables requeridas
 - DB_PASS permite cadena vacía para desarrollo local
