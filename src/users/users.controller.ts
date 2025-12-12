@@ -17,10 +17,14 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { ValidRoles } from 'src/auth/interfaces/valid-roles';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import { User } from './entities/user.entity';
+import { AchievementsService } from '../achievements/achievements.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly achievementsService: AchievementsService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -60,5 +64,17 @@ export class UsersController {
   @Auth()
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto, @GetUser() user: User) {
     return this.usersService.update(id, dto, user.id, user.role);
+  }
+
+  @Get(':id/achievements')
+  @Auth()
+  async getUserAchievements(@Param('id', ParseIntPipe) id: number) {
+    return this.achievementsService.getUserAchievements(id);
+  }
+
+  @Get(':id/stats')
+  @Auth()
+  async getUserStats(@Param('id', ParseIntPipe) id: number) {
+    return this.achievementsService.getUserStats(id);
   }
 }

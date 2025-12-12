@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Rating } from './entities/rating.entity';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { Book } from 'src/books/entities/book.entity';
+import { AchievementsService } from '../achievements/achievements.service';
 
 @Injectable()
 export class RatingsService {
@@ -14,6 +15,8 @@ export class RatingsService {
 
     @InjectRepository(Book) // Inyectamos el Repositorio de Book
     private readonly bookRepository: Repository<Book>,
+
+    private readonly achievementsService: AchievementsService,
   ) {}
 
   /**
@@ -42,6 +45,13 @@ export class RatingsService {
       },
       ['user_id', 'book_id'], // Los campos que forman la llave única
     );
+
+    // Desbloquear logros automáticamente
+    try {
+      await this.achievementsService.checkAndUnlockAchievements(user_id);
+    } catch (error) {
+      console.error('Error al verificar logros:', error);
+    }
 
     // 3. Devolvemos el promedio actualizado
     return this.getAverageRatingForBook(book_id);

@@ -16,6 +16,8 @@ import { UserBookList } from './lists/entities/user-book-list.entity/user-book-l
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { envValidationSchema } from './config/env.validation';
+import { Achievement } from './achievements/entities/achievement.entity';
+import { AchievementsModule } from './achievements/achievements.module';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { envValidationSchema } from './config/env.validation';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASS'),
         database: configService.get<string>('DB_NAME'),
-        entities: [Book, Rating, User, Comment, UserBookList],
+        entities: [Book, Rating, User, Comment, UserBookList, Achievement],
         synchronize: false,
         logging: false,
       }),
@@ -50,6 +52,7 @@ import { envValidationSchema } from './config/env.validation';
     UsersModule,
     ListsModule,
     AuthModule,
+    AchievementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

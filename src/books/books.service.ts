@@ -25,11 +25,22 @@ export class BooksService {
     }
   }
 
-  async findAll(): Promise<Book[]> {
-    return this.bookRepository.find({
-      order: { id: 'ASC' },
-      relations: ['userLists']
-    });
+  async findAll(filters?: { title?: string; author?: string; genre?: string }): Promise<Book[]> {
+    const query = this.bookRepository.createQueryBuilder('book')
+      .leftJoinAndSelect('book.userLists', 'userLists')
+      .orderBy('book.id', 'ASC');
+
+    if (filters?.title) {
+      query.andWhere('book.title LIKE :title', { title: `%${filters.title}%` });
+    }
+    if (filters?.author) {
+      query.andWhere('book.author LIKE :author', { author: `%${filters.author}%` });
+    }
+    if (filters?.genre) {
+      query.andWhere('book.genre LIKE :genre', { genre: `%${filters.genre}%` });
+    }
+
+    return query.getMany();
   }
 
   async findOne(id: number): Promise<Book> {

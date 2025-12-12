@@ -6,10 +6,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorators/get-user.decorator';
 import { Auth } from './decorators/auth.decorator';
 import { ValidRoles } from './interfaces/valid-roles';
+import { AchievementsService } from '../achievements/achievements.service';
+import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly achievementsService: AchievementsService,
+  ) {}
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
@@ -23,8 +28,12 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  async getProfile(@Req() req: any) {
-    return req.user;
+  async getProfile(@GetUser() user: User) {
+    const achievements = await this.achievementsService.getUserAchievements(user.id);
+    return {
+      ...user,
+      achievements,
+    };
   }
   //Ruta solo accesible por el ADMIN
   @Get('private1')

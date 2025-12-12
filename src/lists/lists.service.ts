@@ -5,6 +5,7 @@ import { UserBookList } from '../lists/entities/user-book-list.entity/user-book-
 import { CreateUserBookListDto } from '../lists/dto/create-user-book-list.dto/create-user-book-list.dto';
 import { User } from '../users/entities/user.entity';
 import { Book } from '../books/entities/book.entity';
+import { AchievementsService } from '../achievements/achievements.service';
 
 @Injectable()
 export class ListsService {
@@ -15,6 +16,7 @@ export class ListsService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
+    private readonly achievementsService: AchievementsService,
   ) {}
 
   // CREAT
@@ -43,7 +45,16 @@ export class ListsService {
       status,
     });
 
-    return this.userBookListRepository.save(userBookList);
+    const savedList = await this.userBookListRepository.save(userBookList);
+
+    // Desbloquear logros automáticamente
+    try {
+      await this.achievementsService.checkAndUnlockAchievements(userId);
+    } catch (error) {
+      console.error('Error al verificar logros:', error);
+    }
+
+    return savedList;
   }
 
   // READ - obtener las listas de un usuario
@@ -73,7 +84,16 @@ export class ListsService {
     if (!listItem) throw new NotFoundException('Item not found');
 
     listItem.status = status as any;
-    return this.userBookListRepository.save(listItem);
+    const updatedList = await this.userBookListRepository.save(listItem);
+
+    // Desbloquear logros automáticamente si cambió a LEIDO
+    try {
+      await this.achievementsService.checkAndUnlockAchievements(userId);
+    } catch (error) {
+      console.error('Error al verificar logros:', error);
+    }
+
+    return updatedList;
   }
 
   async findAll(): Promise<UserBookList[]> {

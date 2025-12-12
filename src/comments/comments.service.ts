@@ -6,6 +6,7 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AchievementsService } from '../achievements/achievements.service';
 
 @Injectable()
 export class CommentsService {
@@ -18,6 +19,8 @@ export class CommentsService {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    private readonly achievementsService: AchievementsService,
   ) {}
 
   async create(dto: CreateCommentDto, user_id: number) {
@@ -35,7 +38,16 @@ export class CommentsService {
       parent_comment_id: dto.parent_comment_id ?? null,
     } as any);
 
-    return this.commentRepository.save(comment);
+    const savedComment = await this.commentRepository.save(comment);
+
+    // Desbloquear logros automáticamente
+    try {
+      await this.achievementsService.checkAndUnlockAchievements(user_id);
+    } catch (error) {
+      console.error('Error al verificar logros:', error);
+    }
+
+    return savedComment;
   }
 
   findAll() {
