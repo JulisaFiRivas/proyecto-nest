@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: libroteca
       MYSQL_USER: libroteca_user
       MYSQL_PASSWORD: libroteca_password
-    command: --sql-mode="NO_ENGINE_SUBSTITUTION" --explicit_defaults_for_timestamp=1
+    command: --sql-mode="NO_ENGINE_SUBSTITUTION" --explicit_defaults_for_timestamp=1 --bind-address=0.0.0.0 --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql_data:/var/lib/mysql
       - ./libroteca.sql:/docker-entrypoint-initdb.d/init.sql

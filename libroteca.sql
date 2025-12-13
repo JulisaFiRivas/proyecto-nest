@@ -222,22 +222,23 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `profile_picture`, `r
 
 CREATE TABLE `userbooklist` (
   `id` int(11) NOT NULL,
-  `status` enum('LEIDO','DESEO_LEER') NOT NULL,
+  `status` enum('LEIDO','DESEO_LEER','LEYENDO') NOT NULL,
   `user_id` int(11) NOT NULL,
-  `book_id` int(11) NOT NULL
+  `book_id` int(11) NOT NULL,
+  `added_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `userbooklist`
 --
 
-INSERT INTO `userbooklist` (`id`, `status`, `user_id`, `book_id`) VALUES
-(1, 'LEIDO', 1, 1),
-(2, 'DESEO_LEER', 1, 2),
-(3, 'DESEO_LEER', 1, 4),
-(4, 'LEIDO', 2, 1),
-(5, 'LEIDO', 2, 2),
-(6, 'LEIDO', 3, 4);
+INSERT INTO `userbooklist` (`id`, `status`, `user_id`, `book_id`, `added_date`) VALUES
+(1, 'LEIDO', 1, 1, CURRENT_TIMESTAMP),
+(2, 'DESEO_LEER', 1, 2, CURRENT_TIMESTAMP),
+(3, 'LEYENDO', 1, 4, CURRENT_TIMESTAMP),
+(4, 'LEIDO', 2, 1, CURRENT_TIMESTAMP),
+(5, 'LEYENDO', 2, 2, CURRENT_TIMESTAMP),
+(6, 'LEIDO', 3, 4, CURRENT_TIMESTAMP);
 
 --
 -- Índices para tablas volcadas
