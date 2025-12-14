@@ -6,6 +6,14 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Configurar CORS para permitir conexiones desde el frontend
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || '*', // En producción, especifica el dominio del frontend
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   // Configuración global de ValidationPipe
   app.useGlobalPipes(
     new ValidationPipe({

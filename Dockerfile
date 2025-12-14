@@ -42,12 +42,11 @@ COPY --from=builder /app/dist ./dist
 # Cambiar al usuario no-root
 USER nestjs
 
-# Exponer puerto
+# Exponer puerto (Railway usa variable PORT)
 EXPOSE 3000
 
 # Variables de entorno por defecto (se sobrescriben con .env)
-ENV NODE_ENV=production \
-    PORT=3000
+ENV NODE_ENV=production
 
 # Comando para iniciar la aplicación
 CMD ["node", "dist/main"]
