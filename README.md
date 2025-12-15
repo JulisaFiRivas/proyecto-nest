@@ -41,18 +41,33 @@ Esto creará:
 
 ## Desarrollo Local (Sin Docker)
 
+### Prerrequisitos
+- Node.js 18 o superior
+- MySQL 8.0
+- npm o yarn
+
+### Pasos
+
 ```bash
 # 1. Instalar dependencias
 npm install
 
 # 2. Configurar variables de entorno
-# Copiar .env.example a .env y ajustar valores
+cp .env.example .env
+# Editar .env con tus credenciales de MySQL locales
 
-# 3. Importar base de datos
-# Usar libroteca.sql en MySQL
+# 3. Crear base de datos
+mysql -u root -p
+CREATE DATABASE libroteca;
+exit;
 
-# 4. Ejecutar en modo desarrollo
+# 4. Importar schema
+mysql -u root -p libroteca < libroteca.sql
+
+# 5. Ejecutar en modo desarrollo
 npm run start:dev
+
+# La aplicación estará disponible en http://localhost:3000
 ```
 
 ---
@@ -123,6 +138,178 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
+## Guía de Uso por Funcionalidad
+
+### 1. Registro e Inicio de Sesión
+
+**Registrar nuevo usuario:**
+```bash
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "nuevo_usuario",
+  "email": "nuevo@email.com",
+  "password": "mipassword123"
+}
+```
+
+**Iniciar sesión:**
+```bash
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "nuevo@email.com",
+  "password": "mipassword123"
+}
+```
+
+Guarda el `access_token` recibido para usarlo en endpoints protegidos.
+
+---
+
+### 2. Listar y Buscar Libros (Público)
+
+**Ver todos los libros:**
+```bash
+GET http://localhost:3000/books
+```
+
+**Ver un libro específico:**
+```bash
+GET http://localhost:3000/books/1
+```
+
+---
+
+### 3. Valorar Libros (Requiere autenticación)
+
+**Crear/actualizar valoración:**
+```bash
+POST http://localhost:3000/books/1/rating
+Content-Type: application/json
+Authorization: Bearer {tu_access_token}
+
+{
+  "score": 5
+}
+```
+
+El score debe estar entre 1 y 5.
+
+---
+
+### 4. Comentar en Libros (Requiere autenticación)
+
+**Crear comentario:**
+```bash
+POST http://localhost:3000/comments
+Content-Type: application/json
+Authorization: Bearer {tu_access_token}
+
+{
+  "bookId": 1,
+  "content": "Excelente libro, muy recomendado"
+}
+```
+
+**Responder a un comentario:**
+```bash
+POST http://localhost:3000/comments
+Content-Type: application/json
+Authorization: Bearer {tu_access_token}
+
+{
+  "bookId": 1,
+  "content": "Totalmente de acuerdo",
+  "parentCommentId": 3
+}
+```
+
+---
+
+### 5. Listas de Lectura (Requiere autenticación)
+
+**Ver mis listas:**
+```bash
+GET http://localhost:3000/lists
+Authorization: Bearer {tu_access_token}
+```
+
+**Agregar libro a lista:**
+```bash
+POST http://localhost:3000/lists
+Content-Type: application/json
+Authorization: Bearer {tu_access_token}
+
+{
+  "bookId": 2,
+  "status": "LEYENDO"
+}
+```
+
+Estados disponibles: `LEIDO`, `LEYENDO`, `DESEO_LEER`
+
+**Actualizar estado:**
+```bash
+PATCH http://localhost:3000/lists/1
+Content-Type: application/json
+Authorization: Bearer {tu_access_token}
+
+{
+  "status": "LEIDO"
+}
+```
+
+---
+
+### 6. Gestión de Libros (Solo ADMIN)
+
+**Crear libro:**
+```bash
+POST http://localhost:3000/books
+Content-Type: application/json
+Authorization: Bearer {token_de_admin}
+
+{
+  "title": "Don Quijote de la Mancha",
+  "synopsis": "Las aventuras de un caballero andante",
+  "coverImageUrl": "https://ejemplo.com/imagen.jpg"
+}
+```
+
+**Actualizar libro:**
+```bash
+PATCH http://localhost:3000/books/1
+Content-Type: application/json
+Authorization: Bearer {token_de_admin}
+
+{
+  "title": "Título actualizado"
+}
+```
+
+**Eliminar libro:**
+```bash
+DELETE http://localhost:3000/books/1
+Authorization: Bearer {token_de_admin}
+```
+
+---
+
+### 7. Ver Logros de Usuario (Requiere autenticación)
+
+**Obtener logros del usuario autenticado:**
+```bash
+GET http://localhost:3000/achievements
+Authorization: Bearer {tu_access_token}
+```
+
+Los logros se desbloquean automáticamente al cumplir condiciones (5 valoraciones, 10 comentarios, etc.)
+
+---
+
 ## Stack Tecnológico
 
 - **Backend:** NestJS 10
@@ -163,14 +350,45 @@ Guía completa de testing en `GUIA-TESTING-ENDPOINTS.md` que incluye:
 
 ## Variables de Entorno
 
-Ver `docker-compose.yml` para la configuración completa. Variables principales:
+Copia el archivo `.env.example` a `.env` y ajusta los valores:
 
-- `DB_HOST` - Host de MySQL (default: mysql)
-- `DB_PORT` - Puerto de MySQL (default: 3306)
-- `DB_USER` - Usuario de base de datos
-- `DB_PASS` - Contraseña de base de datos
-- `DB_NAME` - Nombre de la base de datos
-- `JWT_SECRET` - Secreto para firmar tokens JWT
-- `PORT` - Puerto de la aplicación (default: 3000)
+```bash
+cp .env.example .env
+```
+
+### Variables Requeridas
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `NODE_ENV` | Entorno de ejecución | `development` o `production` |
+| `PORT` | Puerto de la aplicación | `3000` |
+| `DB_HOST` | Host de MySQL | `localhost` o `mysql` (Docker) |
+| `DB_PORT` | Puerto de MySQL | `3306` |
+| `DB_USER` | Usuario de base de datos | `root` |
+| `DB_PASS` | Contraseña de base de datos | `tu_password` |
+| `DB_NAME` | Nombre de la base de datos | `libroteca` |
+| `JWT_SECRET` | Secreto para firmar tokens JWT (mínimo 32 caracteres) | `mi_secreto_super_seguro_cambiar_en_produccion` |
+| `CORS_ORIGIN` | Dominio permitido para CORS | `*` (desarrollo) o dominio específico (producción) |
+
+### Ejemplo de archivo .env
+
+```env
+NODE_ENV=development
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASS=mi_password_mysql
+DB_NAME=libroteca
+
+JWT_SECRET=mi_secreto_jwt_super_seguro_cambiar_en_produccion_2024
+CORS_ORIGIN=*
+```
+
+⚠️ **Importante:** 
+- Nunca subas el archivo `.env` al repositorio
+- Cambia `JWT_SECRET` en producción
+- En producción, especifica el dominio exacto en `CORS_ORIGIN`
 
 ---
