@@ -8,7 +8,10 @@ async function bootstrap() {
 
   // Configurar CORS para permitir conexiones desde el frontend
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || '*', // En producción, especifica el dominio del frontend
+    origin: [
+      'http://localhost:4200', // Desarrollo local
+      'https://libroteca-frontend-production.up.railway.app', // Frontend en producción
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
